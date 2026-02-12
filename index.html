@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Legacy Archive</title>
+    <style>
+        :root { --danger: #ff4d4d; --bg: #0a0a0a; --card: #161616; --text: #eeeeee; }
+        body { background: var(--bg); color: var(--text); font-family: sans-serif; margin: 0; padding: 20px; display: flex; flex-direction: column; align-items: center; }
+        h1 { color: var(--danger); letter-spacing: 2px; text-align: center; margin-top: 40px; }
+        .subtitle { color: #888; margin-bottom: 40px; text-align: center; }
+        .container { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; width: 100%; max-width: 1200px; }
+        .card { background: var(--card); border: 1px solid #333; border-radius: 12px; padding: 20px; text-align: center; transition: 0.3s; position: relative; }
+        .card:hover { border-color: var(--danger); box-shadow: 0 0 20px rgba(255, 77, 77, 0.2); }
+        .name { font-size: 1.4rem; font-weight: bold; margin-bottom: 10px; color: #fff; }
+        .timer { font-family: monospace; font-size: 1.5rem; color: var(--danger); background: #000; padding: 15px; border-radius: 8px; margin: 15px 0; line-height: 1.4; border: 1px inset #222; }
+        .mil { font-size: 0.9rem; opacity: 0.6; }
+        .quote { font-size: 0.9rem; color: #888; font-style: italic; border-top: 1px solid #333; padding-top: 10px; }
+    </style>
+</head>
+<body>
+
+    <h1>THE LEGACY ARCHIVE</h1>
+    <p class="subtitle">บันทึกประวัติศาสตร์ที่ยังหายใจ... เพื่อลูกหลานไทยในอนาคต</p>
+
+    <div class="container" id="cards-container"></div>
+
+    <script>
+        // รายชื่อที่ท่านขอมา (สามารถเพิ่ม/แก้ได้ที่นี่)
+        const politicians = [
+            { name: "วิษณุ เครืองาม", birth: "1951-09-15", quote: "บิดาแห่งข้อยกเว้นทางกฎหมาย" },
+            { name: "พล.อ. ประวิตร วงษ์สุวรรณ", birth: "1945-08-11", quote: "นาฬิกายืมเพื่อน แต่เวลาไม่หยุดเดิน" },
+            { name: "พล.อ. ประยุทธ์ จันทร์โอชา", birth: "1954-03-21", quote: "ตำนาน 9 ปีที่คนไทยไม่ลืม" },
+            { name: "ร.อ. ธรรมนัส พรหมเผ่า", birth: "1965-08-18", quote: "มันคือแป้ง... และมันคือกาลเวลา" },
+            { name: "สุริยะ จึงรุ่งเรืองกิจ", birth: "1954-12-10", quote: "ตัวตึงกลุ่มสามมิตร อยู่ยงคงกระพัน" },
+            { name: "อนุทิน ชาญวีรกูล", birth: "1966-09-06", quote: "สายบุรีรัมย์ และกัญชาเสรี" },
+            { name: "เนวิน ชิดชอบ", birth: "1958-10-04", quote: "ครูใหญ่แห่งบุรีรัมย์" },
+            { name: "สุชาติ ชมกลิ่น", birth: "1974-07-15", quote: "เฮ้ง สายบู๊เมืองชล" }
+        ];
+
+        function createCards() {
+            const container = document.getElementById('cards-container');
+            politicians.forEach((p, index) => {
+                const card = document.createElement('div');
+                card.className = 'card';
+                card.innerHTML = `
+                    <div class="name">${p.name}</div>
+                    <div class="timer" id="timer-${index}">...</div>
+                    <div class="quote">"${p.quote}"</div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function updateTimers() {
+            politicians.forEach((p, index) => {
+                const now = new Date();
+                const birth = new Date(p.birth);
+                const diff = now - birth;
+                const years = Math.floor(diff / (1000 * 60 * 60 * 24 * 365.25));
+                const days = Math.floor((diff % (1000 * 60 * 60 * 24 * 365.25)) / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+                const ms = diff % 1000;
+                document.getElementById(`timer-${index}`).innerHTML = 
+                    `${years} ปี ${days} วัน<br>${hours}:${minutes}:${seconds}<span class="mil">.${ms}</span>`;
+            });
+        }
+
+        createCards();
+        setInterval(updateTimers, 50);
+    </script>
+</body>
+</html>
