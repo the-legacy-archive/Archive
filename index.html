@@ -1,49 +1,87 @@
 <!DOCTYPE html>
-<html lang="th">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>The Legacy Archive</title>
     <style>
         :root { --danger: #ff4d4d; --bg: #0a0a0a; --card: #161616; --text: #eeeeee; }
-        body { background: var(--bg); color: var(--text); font-family: sans-serif; margin: 0; padding: 20px; display: flex; flex-direction: column; align-items: center; }
-        h1 { color: var(--danger); letter-spacing: 2px; text-align: center; margin-top: 40px; }
-        .subtitle { color: #888; margin-bottom: 40px; text-align: center; }
-        .container { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; width: 100%; max-width: 1200px; }
-        .card { background: var(--card); border: 1px solid #333; border-radius: 12px; padding: 20px; text-align: center; transition: 0.3s; position: relative; }
-        .card:hover { border-color: var(--danger); box-shadow: 0 0 20px rgba(255, 77, 77, 0.2); }
-        .name { font-size: 1.4rem; font-weight: bold; margin-bottom: 10px; color: #fff; }
-        .timer { font-family: monospace; font-size: 1.5rem; color: var(--danger); background: #000; padding: 15px; border-radius: 8px; margin: 15px 0; line-height: 1.4; border: 1px inset #222; }
-        .mil { font-size: 0.9rem; opacity: 0.6; }
-        .quote { font-size: 0.9rem; color: #888; font-style: italic; border-top: 1px solid #333; padding-top: 10px; }
+        body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', sans-serif; margin: 0; padding: 20px; display: flex; flex-direction: column; align-items: center; }
+        h1 { color: var(--danger); letter-spacing: 2px; text-align: center; margin-top: 40px; text-transform: uppercase; text-shadow: 0 0 10px rgba(255, 77, 77, 0.5); }
+        .subtitle { color: #888; margin-bottom: 40px; text-align: center; font-size: 1rem; max-width: 600px; line-height: 1.5; }
+        .container { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; width: 100%; max-width: 1400px; }
+        .card { background: var(--card); border: 1px solid #333; border-radius: 15px; padding: 20px; text-align: center; transition: 0.3s; position: relative; }
+        .card:hover { border-color: var(--danger); box-shadow: 0 0 25px rgba(255, 77, 77, 0.2); transform: translateY(-5px); }
+        
+        .profile-pic { width: 110px; height: 110px; border-radius: 50%; object-fit: cover; margin-bottom: 15px; border: 3px solid #333; transition: 0.3s; background: #000; }
+        .card:hover .profile-pic { border-color: var(--danger); }
+
+        .name { font-size: 1.2rem; font-weight: bold; margin-bottom: 5px; color: #fff; height: 3rem; display: flex; align-items: center; justify-content: center; }
+        .timer { font-family: 'Courier New', monospace; font-size: 1.4rem; color: var(--danger); background: #000; padding: 12px; border-radius: 8px; margin: 10px 0; border: 1px inset #222; }
+        .mil { font-size: 0.8rem; opacity: 0.6; }
+        .quote { font-size: 0.85rem; color: #666; font-style: italic; border-top: 1px solid #222; padding-top: 10px; min-height: 3em; }
+
+        .donate-section { margin: 60px auto 40px; padding: 30px; border: 1px solid #333; border-radius: 20px; text-align: center; width: 90%; max-width: 500px; background: #111; }
+        .wallet-box { background: #000; padding: 15px; border-radius: 10px; border: 1px inset #222; margin-top: 15px; }
+        code { color: #00ff00; word-break: break-all; font-size: 0.9rem; }
     </style>
 </head>
 <body>
 
     <h1>THE LEGACY ARCHIVE</h1>
-    <p class="subtitle">บันทึกประวัติศาสตร์ที่ยังหายใจ... เพื่อลูกหลานไทยในอนาคต</p>
+    <p class="subtitle">"A real-time record of political longevity and the passage of time for future generations of Thailand."</p>
 
     <div class="container" id="cards-container"></div>
 
+    <div class="donate-section">
+        <h3 style="margin-top:0">Support The Archive</h3>
+        <p style="color:#888; font-size:0.9rem">Support historical record-keeping via Crypto (Wirex)</p>
+        <div class="wallet-box">
+            <div style="color:#f0b90b; font-size:0.7rem; text-transform:uppercase; margin-bottom:5px">USDT (ERC-20 / Ethereum)</div>
+            <code id="wallet-address">YOUR_WIREX_ADDRESS_HERE</code>
+        </div>
+        <p style="color:#444; font-size:0.7rem; margin-top:10px">*Please ensure the network is correct before transferring.</p>
+        <p style="color:#333; font-size:0.75rem; margin-top:20px">The truth belongs to the people.</p>
+    </div>
+
     <script>
-        // รายชื่อที่ท่านขอมา (สามารถเพิ่ม/แก้ได้ที่นี่)
         const politicians = [
-            { name: "วิษณุ เครืองาม", birth: "1951-09-15", quote: "บิดาแห่งข้อยกเว้นทางกฎหมาย" },
-            { name: "พล.อ. ประวิตร วงษ์สุวรรณ", birth: "1945-08-11", quote: "นาฬิกายืมเพื่อน แต่เวลาไม่หยุดเดิน" },
-            { name: "พล.อ. ประยุทธ์ จันทร์โอชา", birth: "1954-03-21", quote: "ตำนาน 9 ปีที่คนไทยไม่ลืม" },
-            { name: "ร.อ. ธรรมนัส พรหมเผ่า", birth: "1965-08-18", quote: "มันคือแป้ง... และมันคือกาลเวลา" },
-            { name: "สุริยะ จึงรุ่งเรืองกิจ", birth: "1954-12-10", quote: "ตัวตึงกลุ่มสามมิตร อยู่ยงคงกระพัน" },
-            { name: "อนุทิน ชาญวีรกูล", birth: "1966-09-06", quote: "สายบุรีรัมย์ และกัญชาเสรี" },
-            { name: "เนวิน ชิดชอบ", birth: "1958-10-04", quote: "ครูใหญ่แห่งบุรีรัมย์" },
-            { name: "สุชาติ ชมกลิ่น", birth: "1974-07-15", quote: "เฮ้ง สายบู๊เมืองชล" }
+            // --- รายชื่อใหม่ที่คุณเพิ่มมา ---
+            { name: "Pridi Banomyong", birth: "1900-05-11", quote: "The Father of Thai Democracy.", img: "https://upload.wikimedia.org/wikipedia/commons/4/4c/Pridi_Phanomyong.jpg" },
+            { name: "Prem Tinsulanonda", birth: "1920-08-26", quote: "Being born to pay back the debt of the land.", img: "https://upload.wikimedia.org/wikipedia/commons/1/1d/Prem_Tinsulanonda_2017.jpg" },
+            { name: "Gen. Chavalit Yongchaiyudh", birth: "1932-05-15", quote: "The master of 'Big Jiew' maneuvers.", img: "https://upload.wikimedia.org/wikipedia/commons/d/da/Chavalit_Yongchaiyudh_2013.jpg" },
+            { name: "Anand Panyarachun", birth: "1932-08-09", quote: "The technocrat who steered through storms.", img: "https://upload.wikimedia.org/wikipedia/commons/e/e0/Anand_Panyarachun_2.jpg" },
+            { name: "Banharn Silpa-archa", birth: "1932-08-19", quote: "The Dragon of Suphan Buri.", img: "https://upload.wikimedia.org/wikipedia/commons/8/8b/Banharn_Silpa-archa_2011.jpg" },
+            { name: "Chuan Leekpai", birth: "1938-07-28", quote: "The sharp-tongued veteran of Parliament.", img: "https://upload.wikimedia.org/wikipedia/commons/c/ce/Chuan_Leekpai_2019.jpg" },
+            { name: "Gen. Surayud Chulanont", birth: "1943-08-28", quote: "From the forest to the Prime Minister's office.", img: "https://upload.wikimedia.org/wikipedia/commons/0/07/Surayud_Chulanont_2007.jpg" },
+            { name: "Somchai Wongsawat", birth: "1947-08-31", quote: "Caught in the political crossfire.", img: "https://upload.wikimedia.org/wikipedia/commons/3/30/Somchai_Wongsawat_2008.jpg" },
+            { name: "Thaksin Shinawatra", birth: "1949-07-26", quote: "The visionary who changed the landscape.", img: "https://upload.wikimedia.org/wikipedia/commons/c/c5/Thaksin_Shinawatra_2004.jpg" },
+            { name: "Gen. Prayut Chan-o-cha", birth: "1954-03-21", quote: "The 9-year era of stability.", img: "https://upload.wikimedia.org/wikipedia/commons/1/18/Prayut_Chan-o-cha_2020.jpg" },
+            { name: "Somsak Prisananuntakul", birth: "1955-04-27", quote: "The veteran voice of Ang Thong.", img: "https://upload.wikimedia.org/wikipedia/commons/b/b3/Placeholder_no_image.png" },
+            { name: "Srettha Thavisin", birth: "1962-02-15", quote: "The businessman at the helm.", img: "https://upload.wikimedia.org/wikipedia/commons/1/17/Srettha_Thavisin_2023.jpg" },
+            { name: "Abhisit Vejjajiva", birth: "1964-08-03", quote: "The intellectual orator.", img: "https://upload.wikimedia.org/wikipedia/commons/a/ab/Abhisit_Vejjajiva_2010.jpg" },
+            { name: "Kanchana Silpa-archa", birth: "1960-02-15", quote: "Carrying on the Suphan Buri legacy.", img: "https://upload.wikimedia.org/wikipedia/commons/b/b3/Placeholder_no_image.png" },
+            { name: "Yingluck Shinawatra", birth: "1967-06-21", quote: "The first female Prime Minister.", img: "https://upload.wikimedia.org/wikipedia/commons/e/e0/Yingluck_Shinawatra_2012.jpg" },
+            { name: "Paetongtarn Shinawatra", birth: "1986-08-21", quote: "The new generation takes the lead.", img: "https://upload.wikimedia.org/wikipedia/commons/e/ea/Paetongtarn_Shinawatra_2024_%28cropped%29.jpg" },
+
+            // --- รายชื่อเดิม (กลุ่มตัวตึง) ---
+            { name: "Wissanu Krea-ngam", birth: "1951-09-15", quote: "The Legal Exceptionist.", img: "https://upload.wikimedia.org/wikipedia/commons/e/ea/Wischanu_Kreangam.png" },
+            { name: "Gen. Prawit Wongsuwan", birth: "1945-08-11", quote: "Borrowed watches, eternal presence.", img: "https://upload.wikimedia.org/wikipedia/commons/f/fc/Prawit_Wongsuwan_2017.jpg" },
+            { name: "Capt. Thamanat Prompow", birth: "1965-08-18", quote: "It's flour... and it's time.", img: "https://upload.wikimedia.org/wikipedia/commons/e/e9/Thammanat_Prompow.jpg" },
+            { name: "Anutin Charnvirakul", birth: "1966-09-06", quote: "Buriram's scion.", img: "https://upload.wikimedia.org/wikipedia/commons/d/da/Anutin_Charnvirakul_%28cropped%29.jpg" },
+            { name: "Newin Chidchob", birth: "1958-10-04", quote: "The Mastermind of Buriram.", img: "https://upload.wikimedia.org/wikipedia/commons/e/e4/Newin_Chidchob_2011.jpg" }
         ];
 
         function createCards() {
             const container = document.getElementById('cards-container');
+            // เรียงลำดับตามความอาวุโส (วันเกิด)
+            politicians.sort((a, b) => new Date(a.birth) - new Date(b.birth));
+            
             politicians.forEach((p, index) => {
                 const card = document.createElement('div');
                 card.className = 'card';
                 card.innerHTML = `
+                    <img src="${p.img}" class="profile-pic" alt="${p.name}" onerror="this.src='https://via.placeholder.com/150/222/666?text=No+Photo'">
                     <div class="name">${p.name}</div>
                     <div class="timer" id="timer-${index}">...</div>
                     <div class="quote">"${p.quote}"</div>
@@ -57,34 +95,26 @@
                 const now = new Date();
                 const birth = new Date(p.birth);
                 const diff = now - birth;
+                
+                if (diff < 0) {
+                    document.getElementById(`timer-${index}`).innerHTML = "Future Legacy";
+                    return;
+                }
+
                 const years = Math.floor(diff / (1000 * 60 * 60 * 24 * 365.25));
                 const days = Math.floor((diff % (1000 * 60 * 60 * 24 * 365.25)) / (1000 * 60 * 60 * 24));
                 const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
                 const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
                 const seconds = Math.floor((diff % (1000 * 60)) / 1000);
                 const ms = diff % 1000;
+
                 document.getElementById(`timer-${index}`).innerHTML = 
-                    `${years} ปี ${days} วัน<br>${hours}:${minutes}:${seconds}<span class="mil">.${ms}</span>`;
+                    `${years} YRS ${days} D<br>${hours}:${minutes}:${seconds}<span class="mil">.${ms}</span>`;
             });
         }
 
         createCards();
         setInterval(updateTimers, 50);
     </script>
-    <div style="margin: 60px auto 40px; padding: 30px; border: 1px solid #333; border-radius: 20px; text-align: center; width: 90%; max-width: 500px; background: linear-gradient(145deg, #111, #050505);">
-        <h3 style="color: #eee; margin-bottom: 10px; font-size: 1.1rem;">Support The Archive</h3>
-        <p style="color: #666; font-size: 0.85rem; margin-bottom: 20px;">Support historical record-keeping via Crypto Crypto (Wirex) </p> 
-        
-        <div style="background: #000; padding: 20px; border-radius: 12px; border: 1px inset #222;">
-            <div style="color: #f0b90b; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px;">USDT (ERC-20 / Ethereum)</div>
-            <code style="color: #00ff00; word-break: break-all; font-size: 0.9rem; font-family: monospace;">0x81FB769d54C172CAE97CDa6D6B3b7fDe3019EA08</code>
-            
-            <div style="margin-top: 15px; pt: 10px; border-top: 1px solid #222;">
-                <span style="font-size: 0.7rem; color: #444;">*"Please ensure the network is correct before transferring."*</span>
-            </div>
-        </div>
-        
-        <p style="margin-top: 20px; color: #444; font-size: 0.75rem;">The truth belongs to the people.</p>
-    </div>
 </body>
 </html>
