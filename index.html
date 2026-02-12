@@ -5,82 +5,76 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>The Legacy Archive</title>
     <style>
-        :root { --danger: #ff4d4d; --bg: #0a0a0a; --card: #161616; --text: #eeeeee; }
+        :root { --danger: #ff4d4d; --bg: #0a0a0a; --card: #161616; --text: #eeeeee; --deceased: #888; }
         body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', sans-serif; margin: 0; padding: 20px; display: flex; flex-direction: column; align-items: center; }
         h1 { color: var(--danger); letter-spacing: 2px; text-align: center; margin-top: 40px; text-transform: uppercase; text-shadow: 0 0 10px rgba(255, 77, 77, 0.5); }
-        .subtitle { color: #888; margin-bottom: 40px; text-align: center; font-size: 1rem; max-width: 600px; line-height: 1.5; }
+        .subtitle { color: #888; margin-bottom: 40px; text-align: center; font-size: 1rem; max-width: 600px; }
         .container { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; width: 100%; max-width: 1400px; }
         .card { background: var(--card); border: 1px solid #333; border-radius: 15px; padding: 20px; text-align: center; transition: 0.3s; position: relative; }
         .card:hover { border-color: var(--danger); box-shadow: 0 0 25px rgba(255, 77, 77, 0.2); transform: translateY(-5px); }
         
-        .profile-pic { width: 110px; height: 110px; border-radius: 50%; object-fit: cover; margin-bottom: 15px; border: 3px solid #333; transition: 0.3s; background: #000; }
-        .card:hover .profile-pic { border-color: var(--danger); }
+        /* สไตล์สำหรับผู้ล่วงลับ */
+        .card.deceased { border-color: #222; opacity: 0.8; }
+        .card.deceased:hover { border-color: var(--deceased); box-shadow: 0 0 15px rgba(136, 136, 136, 0.2); }
+        .card.deceased .timer { color: var(--deceased); border-color: #333; }
+        .card.deceased .profile-pic { filter: grayscale(100%); border-color: var(--deceased); }
+        .status-label { font-size: 0.7rem; font-weight: bold; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 1px; }
 
+        .profile-pic { width: 110px; height: 110px; border-radius: 50%; object-fit: cover; margin-bottom: 15px; border: 3px solid #333; transition: 0.3s; background: #000; }
         .name { font-size: 1.2rem; font-weight: bold; margin-bottom: 5px; color: #fff; height: 3rem; display: flex; align-items: center; justify-content: center; }
         .timer { font-family: 'Courier New', monospace; font-size: 1.4rem; color: var(--danger); background: #000; padding: 12px; border-radius: 8px; margin: 10px 0; border: 1px inset #222; }
         .mil { font-size: 0.8rem; opacity: 0.6; }
         .quote { font-size: 0.85rem; color: #666; font-style: italic; border-top: 1px solid #222; padding-top: 10px; min-height: 3em; }
 
         .donate-section { margin: 60px auto 40px; padding: 30px; border: 1px solid #333; border-radius: 20px; text-align: center; width: 90%; max-width: 500px; background: #111; }
-        .wallet-box { background: #000; padding: 15px; border-radius: 10px; border: 1px inset #222; margin-top: 15px; }
         code { color: #00ff00; word-break: break-all; font-size: 0.9rem; }
     </style>
 </head>
 <body>
 
     <h1>THE LEGACY ARCHIVE</h1>
-    <p class="subtitle">"A real-time record of political longevity and the passage of time for future generations of Thailand."</p>
+    <p class="subtitle">"A digital archive of time and impact. Remembering the past, recording the present."</p>
 
     <div class="container" id="cards-container"></div>
 
     <div class="donate-section">
         <h3 style="margin-top:0">Support The Archive</h3>
         <p style="color:#888; font-size:0.9rem">Support historical record-keeping via Crypto (Wirex)</p>
-        <div class="wallet-box">
-            <div style="color:#f0b90b; font-size:0.7rem; text-transform:uppercase; margin-bottom:5px">USDT (ERC-20 / Ethereum)</div>
-            <code id="wallet-address">YOUR_WIREX_ADDRESS_HERE</code>
+        <div style="background:#000; padding:15px; border-radius:10px; border:1px inset #222;">
+            <div style="color:#f0b90b; font-size:0.7rem; margin-bottom:5px">USDT (ERC-20)</div>
+            <code>YOUR_WIREX_ADDRESS_HERE</code>
         </div>
-        <p style="color:#444; font-size:0.7rem; margin-top:10px">*Please ensure the network is correct before transferring.</p>
-        <p style="color:#333; font-size:0.75rem; margin-top:20px">The truth belongs to the people.</p>
     </div>
 
     <script>
         const politicians = [
-            // --- รายชื่อใหม่ที่คุณเพิ่มมา ---
-            { name: "Pridi Banomyong", birth: "1900-05-11", quote: "The Father of Thai Democracy.", img: "https://upload.wikimedia.org/wikipedia/commons/4/4c/Pridi_Phanomyong.jpg" },
-            { name: "Prem Tinsulanonda", birth: "1920-08-26", quote: "Being born to pay back the debt of the land.", img: "https://upload.wikimedia.org/wikipedia/commons/1/1d/Prem_Tinsulanonda_2017.jpg" },
-            { name: "Gen. Chavalit Yongchaiyudh", birth: "1932-05-15", quote: "The master of 'Big Jiew' maneuvers.", img: "https://upload.wikimedia.org/wikipedia/commons/d/da/Chavalit_Yongchaiyudh_2013.jpg" },
-            { name: "Anand Panyarachun", birth: "1932-08-09", quote: "The technocrat who steered through storms.", img: "https://upload.wikimedia.org/wikipedia/commons/e/e0/Anand_Panyarachun_2.jpg" },
-            { name: "Banharn Silpa-archa", birth: "1932-08-19", quote: "The Dragon of Suphan Buri.", img: "https://upload.wikimedia.org/wikipedia/commons/8/8b/Banharn_Silpa-archa_2011.jpg" },
-            { name: "Chuan Leekpai", birth: "1938-07-28", quote: "The sharp-tongued veteran of Parliament.", img: "https://upload.wikimedia.org/wikipedia/commons/c/ce/Chuan_Leekpai_2019.jpg" },
-            { name: "Gen. Surayud Chulanont", birth: "1943-08-28", quote: "From the forest to the Prime Minister's office.", img: "https://upload.wikimedia.org/wikipedia/commons/0/07/Surayud_Chulanont_2007.jpg" },
-            { name: "Somchai Wongsawat", birth: "1947-08-31", quote: "Caught in the political crossfire.", img: "https://upload.wikimedia.org/wikipedia/commons/3/30/Somchai_Wongsawat_2008.jpg" },
-            { name: "Thaksin Shinawatra", birth: "1949-07-26", quote: "The visionary who changed the landscape.", img: "https://upload.wikimedia.org/wikipedia/commons/c/c5/Thaksin_Shinawatra_2004.jpg" },
-            { name: "Gen. Prayut Chan-o-cha", birth: "1954-03-21", quote: "The 9-year era of stability.", img: "https://upload.wikimedia.org/wikipedia/commons/1/18/Prayut_Chan-o-cha_2020.jpg" },
-            { name: "Somsak Prisananuntakul", birth: "1955-04-27", quote: "The veteran voice of Ang Thong.", img: "https://upload.wikimedia.org/wikipedia/commons/b/b3/Placeholder_no_image.png" },
-            { name: "Srettha Thavisin", birth: "1962-02-15", quote: "The businessman at the helm.", img: "https://upload.wikimedia.org/wikipedia/commons/1/17/Srettha_Thavisin_2023.jpg" },
-            { name: "Abhisit Vejjajiva", birth: "1964-08-03", quote: "The intellectual orator.", img: "https://upload.wikimedia.org/wikipedia/commons/a/ab/Abhisit_Vejjajiva_2010.jpg" },
-            { name: "Kanchana Silpa-archa", birth: "1960-02-15", quote: "Carrying on the Suphan Buri legacy.", img: "https://upload.wikimedia.org/wikipedia/commons/b/b3/Placeholder_no_image.png" },
-            { name: "Yingluck Shinawatra", birth: "1967-06-21", quote: "The first female Prime Minister.", img: "https://upload.wikimedia.org/wikipedia/commons/e/e0/Yingluck_Shinawatra_2012.jpg" },
-            { name: "Paetongtarn Shinawatra", birth: "1986-08-21", quote: "The new generation takes the lead.", img: "https://upload.wikimedia.org/wikipedia/commons/e/ea/Paetongtarn_Shinawatra_2024_%28cropped%29.jpg" },
-
-            // --- รายชื่อเดิม (กลุ่มตัวตึง) ---
-            { name: "Wissanu Krea-ngam", birth: "1951-09-15", quote: "The Legal Exceptionist.", img: "https://upload.wikimedia.org/wikipedia/commons/e/ea/Wischanu_Kreangam.png" },
-            { name: "Gen. Prawit Wongsuwan", birth: "1945-08-11", quote: "Borrowed watches, eternal presence.", img: "https://upload.wikimedia.org/wikipedia/commons/f/fc/Prawit_Wongsuwan_2017.jpg" },
-            { name: "Capt. Thamanat Prompow", birth: "1965-08-18", quote: "It's flour... and it's time.", img: "https://upload.wikimedia.org/wikipedia/commons/e/e9/Thammanat_Prompow.jpg" },
-            { name: "Anutin Charnvirakul", birth: "1966-09-06", quote: "Buriram's scion.", img: "https://upload.wikimedia.org/wikipedia/commons/d/da/Anutin_Charnvirakul_%28cropped%29.jpg" },
-            { name: "Newin Chidchob", birth: "1958-10-04", quote: "The Mastermind of Buriram.", img: "https://upload.wikimedia.org/wikipedia/commons/e/e4/Newin_Chidchob_2011.jpg" }
+            // Deceased
+            { name: "Pridi Banomyong", birth: "1900-05-11", death: "1983-05-02", status: "deceased", quote: "The Father of Thai Democracy.", img: "https://upload.wikimedia.org/wikipedia/commons/4/4c/Pridi_Phanomyong.jpg" },
+            { name: "Prem Tinsulanonda", birth: "1920-08-26", death: "2019-05-26", status: "deceased", quote: "Returning the debt to the motherland.", img: "https://upload.wikimedia.org/wikipedia/commons/1/1d/Prem_Tinsulanonda_2017.jpg" },
+            { name: "Banharn Silpa-archa", birth: "1932-08-19", death: "2016-04-23", status: "deceased", quote: "The Dragon of Suphan Buri.", img: "https://upload.wikimedia.org/wikipedia/commons/8/8b/Banharn_Silpa-archa_2011.jpg" },
+            
+            // Living
+            { name: "Gen. Chavalit Yongchaiyudh", birth: "1932-05-15", status: "living", quote: "The master of political maneuvers.", img: "https://upload.wikimedia.org/wikipedia/commons/d/da/Chavalit_Yongchaiyudh_2013.jpg" },
+            { name: "Anand Panyarachun", birth: "1932-08-09", status: "living", quote: "The respected technocrat.", img: "https://upload.wikimedia.org/wikipedia/commons/e/e0/Anand_Panyarachun_2.jpg" },
+            { name: "Chuan Leekpai", birth: "1938-07-28", status: "living", quote: "The veteran orator.", img: "https://upload.wikimedia.org/wikipedia/commons/c/ce/Chuan_Leekpai_2019.jpg" },
+            { name: "Thaksin Shinawatra", birth: "1949-07-26", status: "living", quote: "The visionary leader.", img: "https://upload.wikimedia.org/wikipedia/commons/c/c5/Thaksin_Shinawatra_2004.jpg" },
+            { name: "Gen. Prayut Chan-o-cha", birth: "1954-03-21", status: "living", quote: "The 9-year administration.", img: "https://upload.wikimedia.org/wikipedia/commons/1/18/Prayut_Chan-o-cha_2020.jpg" },
+            { name: "Paetongtarn Shinawatra", birth: "1986-08-21", status: "living", quote: "The new generation leader.", img: "https://upload.wikimedia.org/wikipedia/commons/e/ea/Paetongtarn_Shinawatra_2024_%28cropped%29.jpg" }
+            // ... เพิ่มคนอื่นๆ ได้ตามโครงสร้างนี้
         ];
 
         function createCards() {
             const container = document.getElementById('cards-container');
-            // เรียงลำดับตามความอาวุโส (วันเกิด)
             politicians.sort((a, b) => new Date(a.birth) - new Date(b.birth));
             
             politicians.forEach((p, index) => {
+                const isDeceased = p.status === "deceased";
                 const card = document.createElement('div');
-                card.className = 'card';
+                card.className = `card ${isDeceased ? 'deceased' : ''}`;
                 card.innerHTML = `
+                    <div class="status-label" style="color: ${isDeceased ? '#888' : '#ff4d4d'}">
+                        ${isDeceased ? 'In Memoriam' : 'Time in Legacy'}
+                    </div>
                     <img src="${p.img}" class="profile-pic" alt="${p.name}" onerror="this.src='https://via.placeholder.com/150/222/666?text=No+Photo'">
                     <div class="name">${p.name}</div>
                     <div class="timer" id="timer-${index}">...</div>
@@ -92,14 +86,9 @@
 
         function updateTimers() {
             politicians.forEach((p, index) => {
-                const now = new Date();
                 const birth = new Date(p.birth);
-                const diff = now - birth;
-                
-                if (diff < 0) {
-                    document.getElementById(`timer-${index}`).innerHTML = "Future Legacy";
-                    return;
-                }
+                const end = p.status === "deceased" ? new Date(p.death) : new Date();
+                const diff = end - birth;
 
                 const years = Math.floor(diff / (1000 * 60 * 60 * 24 * 365.25));
                 const days = Math.floor((diff % (1000 * 60 * 60 * 24 * 365.25)) / (1000 * 60 * 60 * 24));
@@ -108,8 +97,12 @@
                 const seconds = Math.floor((diff % (1000 * 60)) / 1000);
                 const ms = diff % 1000;
 
-                document.getElementById(`timer-${index}`).innerHTML = 
-                    `${years} YRS ${days} D<br>${hours}:${minutes}:${seconds}<span class="mil">.${ms}</span>`;
+                const timerElement = document.getElementById(`timer-${index}`);
+                if (p.status === "deceased") {
+                    timerElement.innerHTML = `<span style="font-size:0.8rem">LIFESPAN:</span><br>${years}Y ${days}D`;
+                } else {
+                    timerElement.innerHTML = `${years}Y ${days}D<br>${hours}:${minutes}:${seconds}<span class="mil">.${ms}</span>`;
+                }
             });
         }
 
